@@ -1,34 +1,51 @@
 #include <stdio.h>
 #include <string.h>
 
-int a[10] = {0,0,0,0,0,0,0,0,0,0};
+#define SIZE 20
+int bloom[SIZE] = {0};
+
+int h1(char *word) {
+    return strlen(word) % SIZE;
+}
+
+int h2(char *word) {
+    int sum = 0;
+    for (int i = 0; word[i] != '\0'; i++) sum += word[i];
+    return sum % SIZE;
+}
 
 int main() {
     int choice;
-    char word[20];
-    int h1, h2;
+    char word[30];
 
-    while(1) {
-        printf("\n1.Add 2.Check 3.Exit: ");
+    while (1) {
+        printf("\n1.Add 2.Check 3.Show 4.Exit: ");
         scanf("%d", &choice);
 
-        if(choice == 3) break;
+        if (choice == 4) break;
+
+        if (choice == 3) {
+            for (int i = 0; i < SIZE; i++)  
+
+             printf("%d ", bloom[i]);
+            printf("\n");
+            continue;
+        }
 
         printf("Enter word: ");
         scanf("%s", word);
-        h1 = strlen(word) % 10;
-        h2 = word[0] % 10;
-        if(choice == 1) {
-            a[h1] = 1;
-            a[h2] = 1;
-            printf("Word added to filter.\n");
+
+        if (choice == 1) {
+            bloom[h1(word)] = 1;
+            bloom[h2(word)] = 1;
+            printf("Added.\n");
         } 
-        else if(choice == 2) {
-            if(a[h1] == 1 && a[h2] == 1) {
-                printf("Result: Maybe yes.\n");
-            } else {
-                printf("Result: Definitely no.\n");
-            }
+        
+        if (choice == 2) {
+            if (bloom[h1(word)] && bloom[h2(word)]) 
+                printf("Result: Maybe yes\n");
+            else 
+                printf("Result: Definitely no\n");
         }
     }
     return 0;
